@@ -38,7 +38,7 @@ def get_user_info(NICKNAME: str):
 
             return user_stat
         except Exception:
-            return f'Error while getting data from the site'
+            return 'Error while getting data from the site'
     return f'Profile {NICKNAME} does not exist'
 
 def format_num(num: str) -> str:

@@ -7,7 +7,7 @@ LEETCODE_DOMAIN = os.getenv('LEETCODE_DOMAIN')
 LEETCODE_PROBLEMS = os.getenv('LEETCODE_PROBLEMS')
 LEETCODE_API = os.getenv('LEETCODE_API')
 
-def random_problem_slug():
+def random_problem_slug() -> str:
     response = requests.get(LEETCODE_PROBLEMS)
     data = response.json()
     problems = data['stat_status_pairs']
@@ -15,7 +15,7 @@ def random_problem_slug():
 
     return random_slug
 
-def get_problem_info():
+def get_problem_info() -> dict:
     slug = random_problem_slug()
 
     response = requests.post(

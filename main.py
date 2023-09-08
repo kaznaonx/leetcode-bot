@@ -25,28 +25,28 @@ async def user_profile(message: types.Message):
     await message.answer(f'Еnter your LeetCode nickname')
 
     @dp.message_handler(lambda message: message.text)
-    async def user_nick_input(message: types.Message):
+    async def profile_info(message: types.Message):
         NICKNAME = message.text
-        user_info = get_user_info(NICKNAME)
+        profile_info = get_user_info(NICKNAME)
 
-        if isinstance(user_info, str):
-            await message.answer(f'{user_info}', parse_mode=types.ParseMode.HTML)
+        if isinstance(profile_info, str):
+            await message.answer(f'{profile_info}')
         else:
             await message.answer(f'''
-LeetCode profile: <a href='{LEETCODE_DOMAIN}/{NICKNAME}'>{NICKNAME}</a>
+LeetCode profile stats: <a href='{LEETCODE_DOMAIN}/{NICKNAME}'>{NICKNAME}</a>
 
 <b>Solved Problems:</b>
-Easy: <b>{user_info['total_easy_problems_solved']}</b>/{user_info['total_easy_problems']}
-Medium: <b>{user_info['total_medium_problems_solved']}</b>/{user_info['total_medium_problems']}
-Hard: <b>{user_info['total_hard_problems_solved']}</b>/{user_info['total_hard_problems']}
-Total: <b>{user_info['total_problems_solved']}</b>/{user_info['total_problems']}
+Easy: <b>{profile_info['total_easy_problems_solved']}</b>/{profile_info['total_easy_problems']}
+Medium: <b>{profile_info['total_medium_problems_solved']}</b>/{profile_info['total_medium_problems']}
+Hard: <b>{profile_info['total_hard_problems_solved']}</b>/{profile_info['total_hard_problems']}
+Total: <b>{profile_info['total_problems_solved']}</b>/{profile_info['total_problems']}
 
-<b>{user_info['submissions_last_year']}</b> submissions in the last year
+<b>{profile_info['submissions_last_year']}</b> submissions in the last year
 
-Rank: <b>{user_info['user_rank']}</b>
-Reputation: <b>{user_info['reputation']}</b>
+Rank: <b>{profile_info['user_rank']}</b>
+Reputation: <b>{profile_info['reputation']}</b>
 
-Contribution Point: <b>{user_info['contribution_point']}</b>''', parse_mode=types.ParseMode.HTML)
+Contribution Point: <b>{profile_info['contribution_point']}</b>''', parse_mode=types.ParseMode.HTML)
 
 @dp.message_handler(text='Problems')
 async def random_problem(message: types.Message):
