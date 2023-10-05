@@ -1,66 +1,20 @@
-from aiogram import Bot, Dispatcher, executor, types
-from dotenv import load_dotenv
-import os
+from aiogram import Bot, Dispatcher
+import asyncio
 
-from utils.random_problem import get_problem_info
-from utils.user_info import get_user_info
+from handlers import bot_messages, user_commands
+from utils.token import TOKEN
 
-import utils.keyboards as kbrd
+async def main():
+    bot = Bot(TOKEN, parse_mode='HTML')
+    dp = Dispatcher()
 
-load_dotenv('utils/.env')
-TOKEN = os.getenv('TOKEN')
-LEETCODE_DOMAIN = os.getenv('LEETCODE_DOMAIN')
+    dp.include_routers(
+        user_commands.router,
+        bot_messages.router,
+    )
 
-bot = Bot(TOKEN)
-dp = Dispatcher(bot)
-
-@dp.message_handler(commands=['Start'])
-async def main_menu(message: types.Message):
-    await message.answer(f'''
-Hi, {message.from_user.mention}
-This is a Telegram Bot to view LeetCode statistics of your profile and randomly select a problem''', reply_markup=kbrd.kbrd)
-
-@dp.message_handler(text='Profile')
-async def user_profile(message: types.Message):
-    await message.answer(f'Еnter your LeetCode nickname')
-
-    @dp.message_handler(lambda message: message.text)
-    async def profile_info(message: types.Message):
-        NICKNAME = message.text
-        profile_info = get_user_info(NICKNAME)
-
-        if isinstance(profile_info, str):
-            await message.answer(f'{profile_info}')
-        else:
-            await message.answer(f'''
-LeetCode profile stats: <a href='{LEETCODE_DOMAIN}/{NICKNAME}'>{NICKNAME}</a>
-
-<b>Solved Problems:</b>
-Easy: <b>{profile_info['total_easy_problems_solved']}</b>/{profile_info['total_easy_problems']}
-Medium: <b>{profile_info['total_medium_problems_solved']}</b>/{profile_info['total_medium_problems']}
-Hard: <b>{profile_info['total_hard_problems_solved']}</b>/{profile_info['total_hard_problems']}
-Total: <b>{profile_info['total_problems_solved']}</b>/{profile_info['total_problems']}
-
-<b>{profile_info['submissions_last_year']}</b> submissions in the last year
-
-Rank: <b>{profile_info['user_rank']}</b>
-Reputation: <b>{profile_info['reputation']}</b>
-
-Contribution Point: <b>{profile_info['contribution_point']}</b>''', parse_mode=types.ParseMode.HTML)
-
-@dp.message_handler(text='Problems')
-async def random_problem(message: types.Message):
-    problem_info = get_problem_info()
-    problem_link = kbrd.problem_link(problem_info['problem_title_slug'])
-
-    await message.answer(f'''
-<b>{problem_info['problem_id']}.</b> {problem_info['problem_title']}
-<b>Topic:</b> {problem_info['problem_topic']}
-
-<b>Difficulty:</b> {problem_info['problem_difficulty']}
-<b>Status:</b> {problem_info['problem_paid_only']}
-
-Accepted <b>{problem_info['accepted']}</b> | Submissions <b>{problem_info['submissions']}</b> | Acceptance Rate <b>{problem_info['acceptance_rate']}</b>''', reply_markup=problem_link, parse_mode=types.ParseMode.HTML)
+    await bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(bot)
 
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+    asyncio.run(main())

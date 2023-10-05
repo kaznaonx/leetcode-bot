@@ -1,21 +1,17 @@
-from dotenv import load_dotenv
-import os
 import requests
 
-load_dotenv('utils/.env')
+LEETCODE_DOMAIN='https://leetcode.com'
+LEETCODE_PROFILE='https://leetcode-api-faisalshohag.vercel.app/'
 
-LEETCODE_DOMAIN = os.getenv('LEETCODE_DOMAIN')
-LEETCODE_PROFILE = os.getenv('LEETCODE_PROFILE')
-
-def check_profile_existence(NICKNAME: str) -> bool:
-    LEETCODE_USER_PROFILE = f'{LEETCODE_DOMAIN}/{NICKNAME}'
+def check_profile_existence(nick: str) -> bool:
+    LEETCODE_USER_PROFILE = f'{LEETCODE_DOMAIN}/{nick}'
     response = requests.get(LEETCODE_USER_PROFILE)
 
     return response.status_code == 200
 
-def get_user_info(NICKNAME: str):
-    if check_profile_existence(NICKNAME):
-        API_USER = LEETCODE_PROFILE + NICKNAME
+def get_user_info(nick: str):
+    if check_profile_existence(nick):
+        API_USER = LEETCODE_PROFILE + nick
 
         try:
             response = requests.get(API_USER, timeout=5)
@@ -39,7 +35,7 @@ def get_user_info(NICKNAME: str):
             return user_stat
         except Exception:
             return 'Error while getting data from the site'
-    return f'Profile {NICKNAME} does not exist'
+    return f'Profile {nick} does not exist'
 
 def format_num(num: str) -> str:
     return '{:,}'.format(num)

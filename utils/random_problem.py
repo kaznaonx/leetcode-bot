@@ -1,11 +1,8 @@
 import requests, json, random
-from dotenv import load_dotenv
-import os
 
-load_dotenv('utils/.env')
-LEETCODE_DOMAIN = os.getenv('LEETCODE_DOMAIN')
-LEETCODE_PROBLEMS = os.getenv('LEETCODE_PROBLEMS')
-LEETCODE_API = os.getenv('LEETCODE_API')
+LEETCODE_DOMAIN='https://leetcode.com'
+LEETCODE_PROBLEMS='https://leetcode.com/api/problems/all/'
+LEETCODE_API='https://leetcode.com/graphql'
 
 def random_problem_slug() -> str:
     response = requests.get(LEETCODE_PROBLEMS)
