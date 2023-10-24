@@ -1,8 +1,9 @@
 from aiogram import Bot, Dispatcher
 import asyncio
+import logging
 
-from handlers import bot_messages, user_commands
-from utils.token import TOKEN
+from app.handlers import bot_messages, user_commands
+from app.token import TOKEN
 
 async def main():
     bot = Bot(TOKEN, parse_mode='HTML')
@@ -13,6 +14,7 @@ async def main():
         bot_messages.router,
     )
 
+    logging.basicConfig(level=logging.INFO)
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 

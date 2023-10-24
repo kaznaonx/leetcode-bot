@@ -1,10 +1,10 @@
 from aiogram import Router, F
 from aiogram.types import Message
 
-from utils.random_problem import get_problem_info
-from utils.user_info import get_user_info
-from utils import keyboards
-from handlers import messages
+from app.utils.requests_random_problem import get_problem_info
+from app.utils.requests_user_info import get_user_info
+from app.utils import keyboards
+from . import messages
 
 router = Router()
 
